@@ -1,0 +1,50 @@
+Bison translator README
+
+ [The "BSD licence"]
+ Copyright (c) 2005 Terence Parr
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+    derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+I put this converter together to convert the Intermetrics Ada grammar to ANTLR; basically, I started with the bison parse.y grammar reworked it into ANTLR syntax, and then converted the lexer to ANTLR.  If you find any problems, please let me know.
+
+To build the translator, you will need to run ANTLR 2.7.6 (probably any version above 2.7.3) over the two grammars, and then compile them along with BisonReader.java.  To run, just invoke  "java [ -o directory ] <file>.y"; the translator will create a <file>.g in the output directory.
+
+The major problem with translated grammars is left recursion.  yacc's BNF is pretty limited compared to ANTLR's EBNF:  no grouping and no loops discourages complex rules.
+
+Left recursion takes the form
+
+foo_s :  foo_s foo ;
+
+or
+
+bar_s
+	:
+	bar_s bar
+	|
+	;
+
+just convert foo_s to (foo)+ and bar_s to (bar)*, and you should have a working parser grammar quickly.  ANTLR will detect left recursion for you; there is no need to hunt for these cases by hand.
+
+Error handling is another issue.  "error" is a yacc keyword that marks a point at which errors are caught; any tokens following are for re-synchronization.  Just remove alternatives with "error", possibly replacing them with an ANTLR error handler. 
