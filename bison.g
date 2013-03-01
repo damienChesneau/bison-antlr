@@ -74,7 +74,7 @@ tokens {
 	PERCENT_NONDETERMINISTIC_PARSER = "%nondeterministic-parser";
 	PERCENT_OUTPUT          = "%output";
 	PERCENT_PARSE_PARAM     = "%parse-param";
-	PERCENT_PURE_PARSER     = "%pure-parser";
+	PERCENT_PURE_PARSER     = "%pure_parser";
 	PERCENT_REQUIRE	  = "%require";
 	PERCENT_SKELETON        = "%skeleton";
 	PERCENT_START           = "%start";
@@ -114,7 +114,7 @@ declaration!
 	|	"%nondeterministic-parser"		   
 	|	"%output" "=" STRING /* content */             
 	|	"%parse-param"	ACTION
-	|	"%pure-parser"                         
+	|	"%pure_parser"                         
 	|	"%require" STRING /* content */               
 	|	"%skeleton" STRING /* content */               
 	|	"%token-table"                           
