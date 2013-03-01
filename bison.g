@@ -176,6 +176,7 @@ grammar
    body of the grammar.  */
 	(	rule
 	|!	grammar_declaration SEMI
+	|!	COMMENT
 	)+
 	;
 
